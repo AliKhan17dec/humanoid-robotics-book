@@ -1,55 +1,87 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+---
+Sync Impact Report
+---
+Version Change: 0.0.0 → 1.0.0
+Modified Principles:
+- [PRINCIPLE_1_NAME] → Technical accuracy grounded in verified robotics, AI, and engineering sources
+- [PRINCIPLE_2_NAME] → Conceptual clarity for a global audience with beginner-to-intermediate STEM background
+- [PRINCIPLE_3_NAME] → Practical applicability for students who want to build real humanoid robotics systems
+- [PRINCIPLE_4_NAME] → Reproducibility: all examples, formulas, and code must be testable and technically correct
+- [PRINCIPLE_5_NAME] → Pedagogical progression: concepts must be introduced from simple → advanced in a structured learning path
+- [PRINCIPLE_6_NAME] → Ethical responsibility: safety, risk management, and responsible AI/robotics practices must be emphasized
+Added Sections:
+- Key Standards
+- Constraints & Success Criteria
+Removed Sections:
+- [SECTION_2_NAME]
+- [SECTION_3_NAME]
+Templates Requiring Updates:
+- ✅ .specify/templates/plan-template.md
+- ✅ .specify/templates/spec-template.md
+- ✅ .specify/templates/tasks-template.md
+Follow-up TODOs: None
+-->
+# Physical AI & Humanoid Robotics — AI/Spec-Driven Book Creation (Docusaurus + GitHub Pages) Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### Technical accuracy grounded in verified robotics, AI, and engineering sources
+All factual claims, definitions, and technical explanations must be traceable to primary or highly reputable sources.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### Conceptual clarity for a global audience with beginner-to-intermediate STEM background
+Writing must be clear and accessible, with a Flesch-Kincaid Grade level of 9–11. All diagrams and code must be explained in plain English, and terminology must be consistent.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### Practical applicability for students who want to build real humanoid robotics systems
+The book must provide real-world robotics knowledge and hands-on, testable examples.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### Reproducibility: all examples, formulas, and code must be testable and technically correct
+All examples, formulas, and code must be verifiable and accurate.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### Pedagogical progression: concepts must be introduced from simple → advanced in a structured learning path
+The book's structure must follow a logical learning progression.
 
-### [PRINCIPLE_6_NAME]
+### Ethical responsibility: safety, risk management, and responsible AI/robotics practices must be emphasized
+A dedicated safety section is mandatory, covering robotics risks, mechanical safety, and AI alignment for physical systems.
 
+## Key Standards
 
-[PRINCIPLE__DESCRIPTION]
+### Source & Accuracy Standards
+- All factual claims, definitions, and technical explanations must be traceable to primary or highly reputable sources.
+- Minimum 40% peer-reviewed research (journals such as Nature Robotics, IEEE Transactions, ACM, MDPI Robotics).
+- Remaining sources can include: Robotics textbooks, Manufacturer datasheets, Reputable educational resources (MIT, Stanford, CMU, ETH Zürich), and Industry documentation (ROS, OpenAI Gym, NVIDIA Isaac, Boston Dynamics research).
+- No AI-generated hallucinated citations—verification required.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### Writing & Structure Standards
+- Tone: authoritative, educational, and technically correct.
+- Writing clarity: Flesch-Kincaid Grade 9–11 (global readability).
+- All diagrams/code must be explained in plain English.
+- Consistent terminology across chapters.
+- All formulas must include variable explanations.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### Citations & Formatting
+- Citation format: APA 7th edition.
+- Every chapter must include a references section.
+- Images/diagrams must have attribution if reused.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Constraints & Success Criteria
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### Constraints
+- Total book length: 15,000–25,000 words.
+- Minimum 25 credible sources (10+ peer-reviewed).
+- Book structure must follow Docusaurus documentation format.
+- Must be deployable to GitHub Pages through an automated workflow.
+- File output must include: Markdown files for each chapter, Sidebar.js configuration, and Static assets (images, diagrams, charts).
+
+### Success Criteria
+- All factual claims and equations verified against primary or reputable sources.
+- No hallucinated references; all citations must resolve to real materials.
+- Zero plagiarism (must pass plagiarism checking before publishing).
+- Smooth Docusaurus build & deployment to GitHub Pages.
+- Chapters are logically structured, readable, and experimentally reproducible.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This Constitution is the single source of truth for the project's principles and standards. All contributions and reviews MUST adhere to it. Amendments require discussion, documentation, and a clear rationale.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-12-05 | **Last Amended**: 2025-12-05

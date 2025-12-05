@@ -31,7 +31,12 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+*   [ ] **Technical Accuracy**: All technical claims are traceable to verified sources.
+*   [ ] **Conceptual Clarity**: The language used is clear and accessible (Grade 9-11).
+*   [ ] **Practical Applicability**: The feature provides practical, real-world value.
+*   [ ] **Reproducibility**: All examples and code are testable and correct.
+*   [ ] **Pedagogical Progression**: The feature fits logically within the book's learning path.
+*   [ ] **Ethical Responsibility**: Safety and ethical considerations are addressed.
 
 ## Project Structure
 

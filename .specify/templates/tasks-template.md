@@ -44,6 +44,15 @@ description: "Task list template for feature implementation"
   ============================================================================
 -->
 
+## Constitution-Aligned Tasks
+
+When creating tasks, ensure they align with the project constitution:
+
+*   **Technical Accuracy**: Add tasks for source verification and fact-checking.
+*   **Conceptual Clarity**: Include tasks for reviewing and simplifying language.
+*   **Reproducibility**: Create tasks to test all code, examples, and formulas.
+*   **Ethical Responsibility**: Add tasks to review content for safety and ethical considerations.
+
 ## Phase 1: Setup (Shared Infrastructure)
 
 **Purpose**: Project initialization and basic structure

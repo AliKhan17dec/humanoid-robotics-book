@@ -2,7 +2,8 @@
 
 **Feature Branch**: `[###-feature-name]`  
 **Created**: [DATE]  
-**Status**: Draft  
+**Status**: Draft
+**Constitution Alignment**: Ensure all scenarios and requirements align with the project constitution, especially regarding Technical Accuracy, Conceptual Clarity, and Ethical Responsibility.  
 **Input**: User description: "$ARGUMENTS"
 
 ## User Scenarios & Testing *(mandatory)*
