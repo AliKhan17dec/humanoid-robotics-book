@@ -1,0 +1,52 @@
+---
+title: Module 2 Assessment
+sidebar_position: 5
+---
+
+# Module 2 Assessment: The Digital Twin (Gazebo & Unity)
+
+This assessment aims to test your comprehension of robot simulation principles, your ability to work with Gazebo and Unity, and your understanding of physics and sensor modeling in digital twins.
+
+## Part 1: Conceptual Understanding (Short Answer)
+
+1.  **Digital Twins**: Explain the concept of a "digital twin" in the context of robotics. What are its primary benefits for development and testing?
+2.  **Gazebo vs. Unity**: Briefly compare and contrast Gazebo and Unity as robot simulation platforms. In what scenarios would you choose one over the other?
+3.  **URDF vs. SDF**: Describe the primary differences between URDF and SDF. Why might you use one over the other for certain aspects of robot and environment description in Gazebo?
+4.  **Physics Simulation**: What role do "Rigid Body Dynamics" and "Collision Detection" play in realistic robot simulation? How are they typically configured for a robot link?
+5.  **Sensor Modeling**: Explain why accurate sensor modeling in simulation is crucial for training AI perception systems. Provide an example of a sensor parameter that would significantly impact the quality of simulated data.
+
+## Part 2: Practical Application (Coding & Simulation Exercises)
+
+### Exercise 1: Enhanced Custom Gazebo World
+
+Extend your `my_test_world.world` from the mini-project.
+
+**Requirements**:
+1.  **Add a Dynamic Obstacle**: Add a simple dynamic obstacle (e.g., a sphere or cylinder) that is not `static` and can be pushed by your robot. Ensure it has appropriate mass and friction properties.
+2.  **Add a Light Source**: Experiment with adding a custom light source to your world, adjusting its type (e.g., `point` or `spot`) and color.
+3.  **Integrate a Depth Camera**: Modify your robot's URDF (or a separate Gazebo extension file) to include a simulated depth camera sensor. Ensure it publishes data to a ROS 2 topic (e.g., `/camera/depth/image_raw`).
+4.  **Visualize Depth Data**: Launch RViz2 and visualize the depth camera's output.
+
+### Exercise 2: Unity Robot Visualization with Simple Script
+
+Import a complex URDF humanoid robot model into a new Unity project and create a simple script to make it perform a basic action.
+
+**Requirements**:
+1.  **Import Humanoid URDF**: Import a more complex humanoid URDF model (e.g., from a public repository like `robot_description` packages) into a new Unity project using the `UrdfImporter`.
+2.  **Environment Setup**: Create a simple 3D environment around the robot using Unity's built-in tools (e.g., a ground plane, a few primitive shapes).
+3.  **Simple Animation/Movement**: Write a C# Unity script that, when attached to the root of your imported robot, makes one of its joints move (e.g., rotate an arm) or makes the whole robot translate slightly. You can use `transform.Translate()` or directly manipulate a `Joint` component.
+4.  **Run & Observe**: Play the Unity scene and observe the robot's action.
+
+## Part 3: Troubleshooting Scenario
+
+You've integrated a simulated LiDAR sensor into your robot's URDF and launched it in Gazebo. When you try to visualize the `/scan` topic in RViz2, you see an error: "No transform from [laser_frame] to [map]".
+
+**Describe the steps you would take to debug and resolve this ROS 2 TF (Transform Frame) issue in your Gazebo simulation.**
+
+## Submission Guidelines
+
+*   For Part 1, provide your answers in a text document or markdown.
+*   For Part 2, submit your modified Gazebo world file, your robot's URDF/Gazebo extension, and your Unity project folder (or relevant script and scene files).
+*   For Part 3, describe your troubleshooting steps clearly and concisely.
+
+Good luck!

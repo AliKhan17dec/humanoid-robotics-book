@@ -1,0 +1,64 @@
+---
+title: Module 1 Assessment
+sidebar_position: 6
+---
+
+# Module 1 Assessment: The Robotic Nervous System (ROS 2)
+
+This assessment aims to test your comprehension of the fundamental concepts and practical skills covered in Module 1, focusing on ROS 2 architecture, Python client library (`rclpy`), and URDF.
+
+## Part 1: Conceptual Understanding (Short Answer)
+
+1.  **Nodes**: Explain the role of a ROS 2 Node in a robotic system. Why is modularity important in ROS 2 node design?
+2.  **Topics vs. Services vs. Actions**: Differentiate between ROS 2 Topics, Services, and Actions. Provide a real-world robotics scenario where each communication pattern would be the most appropriate choice.
+3.  **DDS**: Briefly describe the significance of the Data Distribution Service (DDS) as the middleware in ROS 2. What advantages does it offer over ROS 1's communication system?
+4.  **URDF Components**: What are the two primary XML tags used to define a robot's structure in URDF? Briefly explain the purpose of each.
+5.  **Joint Types**: Name and describe at least three different joint types available in URDF, providing an example of where each might be used in a humanoid robot.
+
+## Part 2: Practical Application (Coding Exercises)
+
+### Exercise 1: Advanced Temperature Sensor (Extension of Mini-Project)
+
+Extend the `smart_sensor_pkg` mini-project.
+
+**Requirements**:
+1.  **Add Battery Status**:
+    *   Modify the `SmartTemperatureSensor` node to also publish a `std_msgs.msg.Float32` message to a `/battery_status_reading` topic (simulating battery percentage, e.g., decreasing over time).
+    *   Update the `get_sensor_status` service response to include the current battery percentage in its message.
+2.  **Create Battery Monitor Node**:
+    *   Develop a new Python node (`battery_monitor_node.py`) within `smart_sensor_pkg`.
+    *   This node should subscribe to `/battery_status_reading`.
+    *   If the battery status drops below 20%, it should log a `WARNING` message.
+3.  **Build and Test**:
+    *   Ensure your `setup.py` is updated to include the new `battery_monitor_node.py` entry point.
+    *   Build your `smart_sensor_pkg`.
+    *   Run both the `smart_sensor_node` and `battery_monitor_node` concurrently and verify their behavior.
+
+### Exercise 2: Simple Humanoid Arm URDF
+
+Create a URDF file that describes a simple two-jointed robotic arm for a humanoid.
+
+**Requirements**:
+1.  **Base Link**: Define a `base_link` (e.g., a shoulder plate).
+2.  **Upper Arm Link**: Connect an `upper_arm_link` to the `base_link` with a `revolute` joint (shoulder joint).
+3.  **Forearm Link**: Connect a `forearm_link` to the `upper_arm_link` with another `revolute` joint (elbow joint).
+4.  **Joint Limits**: Define reasonable `lower` and `upper` limits for both revolute joints.
+5.  **Visuals & Collisions**: Add basic `<visual>` and `<collision>` properties (e.g., simple boxes or cylinders) for each link.
+6.  **Visualize**: Use `ros2 launch urdf_tutorial display.launch.py model:=<path_to_your_urdf_file>` or RViz2 directly to visualize your arm.
+
+## Part 3: Troubleshooting Scenario
+
+You've developed a ROS 2 node (`my_camera_driver`) that publishes images to `/camera/image_raw`. Another node (`image_processor`) subscribes to this topic, but you're not seeing any output from the processor.
+
+**Describe the steps you would take to debug this issue using ROS 2 command-line tools.** Consider potential problems like:
+*   Nodes not running.
+*   Topic names/types mismatch.
+*   Communication issues.
+
+## Submission Guidelines
+
+*   For Part 1, provide your answers in a text document or markdown.
+*   For Part 2, submit your modified `smart_sensor_node.py`, `battery_monitor_node.py`, and your humanoid arm URDF file.
+*   For Part 3, describe your troubleshooting steps clearly and concisely.
+
+Good luck!

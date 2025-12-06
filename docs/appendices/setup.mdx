@@ -1,0 +1,126 @@
+---
+title: Software Setup Guide
+sidebar_position: 2
+---
+
+# Appendix B: Software Setup Guide
+
+This guide provides detailed instructions for setting up your development environment to follow along with the examples and projects in this book. A correctly configured environment is crucial for reproducibility and a smooth learning experience.
+
+## 1. Operating System Installation: Ubuntu 22.04 LTS
+
+All examples and instructions in this book are based on **Ubuntu 22.04 LTS (Jammy Jellyfish)**.
+
+*   **Download**: Obtain the ISO image from the official Ubuntu website (https://ubuntu.com/download/desktop).
+*   **Installation**: Perform a clean installation on your primary development workstation. Ensure you allocate sufficient disk space (at least 200 GB) for all software, datasets, and simulations.
+
+## 2. NVIDIA GPU Driver Installation
+
+If your workstation has an NVIDIA GPU (recommended for Isaac Sim and Isaac ROS), ensure you install the correct drivers.
+
+*   **Check Driver**: `nvidia-smi` in the terminal. If it's not installed or showing an old driver, update it.
+*   **Installation**: It's often best to install drivers via Ubuntu's "Additional Drivers" utility or directly from NVIDIA's website. Ensure the driver version is **525.60.11 or later** for Isaac Sim compatibility.
+
+## 3. ROS 2 Installation: Humble Hawksbill or Iron Irwini
+
+This book uses **ROS 2 Humble Hawksbill** (LTS) or **ROS 2 Iron Irwini**. Humble is recommended for stability.
+
+1.  **Locale Setup**:
+    ```bash
+    sudo apt update && sudo apt install locales
+    sudo locale-gen en_US en_US.UTF-8
+    sudo update-locale LC_ALL=en_US.UTF-8 LANG=en_US.UTF-8
+    export LANG=en_US.UTF-8
+    ```
+2.  **Add ROS 2 apt repository**:
+    ```bash
+    sudo apt install software-properties-common
+    sudo add-apt-repository universe
+    sudo apt update && sudo apt install curl -y
+    sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+    ```
+3.  **Install ROS 2 Desktop Full**:
+    ```bash
+    sudo apt update
+    sudo apt install ros-humble-desktop-full # Or ros-iron-desktop-full
+    ```
+4.  **Environment Setup**:
+    ```bash
+    echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc # Or iron
+    source ~/.bashrc
+    ```
+5.  **Install `rosdep`**:
+    ```bash
+    sudo apt install python3-rosdep
+    sudo rosdep init
+    rosdep update
+    ```
+
+## 4. Gazebo Installation
+
+Gazebo is usually installed as part of ROS 2 Desktop Full. To verify:
+
+```bash
+ros2 run gazebo_ros gazebo
+```
+If it doesn't launch, you might need to install the Gazebo ROS packages:
+```bash
+sudo apt install ros-humble-gazebo-ros-pkgs # Or iron
+```
+
+## 5. Unity Installation (Optional, for Module 2 advanced topics)
+
+1.  **Install Unity Hub**: Download from https://unity.com/download.
+2.  **Install Unity Editor**: Install an LTS version (e.g., Unity 2022.3 LTS) via Unity Hub.
+3.  **Install Unity Robotics Packages**: Refer to Chapter 2.3 for detailed instructions on installing `Unity.Robotics.ROSTools`, `UrdfImporter`, `Visualizations`, `Sensors`, and `Perception` via Unity Package Manager.
+
+## 6. NVIDIA Isaac Sim Installation
+
+Isaac Sim requires a powerful NVIDIA GPU and is installed via the NVIDIA Omniverse Launcher.
+
+1.  **Install NVIDIA Omniverse Launcher**: Download and install from https://www.nvidia.com/omniverse/download/launcher/.
+2.  **Install Isaac Sim**: Within the Omniverse Launcher, navigate to the "Exchange" tab, search for "Isaac Sim," and install the latest compatible version (e.g., 2023.1.1).
+3.  **Setup for ROS 2**: Follow Isaac Sim's documentation for setting up the ROS 2 Bridge extension.
+
+## 7. Node.js and Yarn Installation (for Book Development)
+
+To build and run the Docusaurus-based book locally:
+
+1.  **Install Node.js (v18.x or later)**:
+    ```bash
+    sudo apt update
+    sudo apt install nodejs npm
+    sudo npm install -g n
+    sudo n 18 # Install Node.js v18
+    sudo npm install -g yarn
+    ```
+2.  **Install Project Dependencies**:
+    ```bash
+    cd /path/to/your/book/repository
+    yarn install
+    ```
+
+## 8. Building and Serving the Book
+
+*   **To build**: `yarn build`
+*   **To serve locally**: `yarn start` (access at `http://localhost:3000`)
+
+## 9. Python 3.10+ and Dependencies
+
+Ensure you are using Python 3.10 or later, which is the default for Ubuntu 22.04.
+You may need to install additional Python packages for specific examples:
+
+```bash
+pip install -r requirements.txt # If a requirements.txt is provided in code examples
+```
+For Whisper, install:
+```bash
+pip install openai-whisper gtts # gTTS for dummy audio in some examples
+```
+
+## 10. Code Examples Directory
+
+Throughout the book, code examples will be organized in a `code/` directory at the project root, with subdirectories for each module (e.g., `code/module1`).
+
+By following this setup guide, you will have a comprehensive development environment ready for exploring the world of Physical AI and Humanoid Robotics.

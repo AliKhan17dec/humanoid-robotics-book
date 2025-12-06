@@ -1,0 +1,95 @@
+---
+title: ROS 2 Architecture
+sidebar_position: 2
+---
+
+# ROS 2 Architecture: Building Blocks of a Robotic System
+
+Understanding the architectural components of ROS 2 is crucial for designing, implementing, and debugging robotic applications. ROS 2 provides a modular, distributed, and flexible framework for inter-process communication within a robot system.
+
+## The ROS 2 Graph: Nodes, Topics, Services, and Actions
+
+At the heart of ROS 2 lies the "ROS Graph," a network of interconnected processes that communicate with each other. The primary communication patterns in ROS 2 are built around **Nodes**, **Topics**, **Services**, and **Actions**.
+
+### 1. Nodes: The Processing Units
+
+A **Node** is an executable process that performs computation. Typically, a robot system is composed of many nodes, each responsible for a specific, single-purpose task (e.g., a node for reading LiDAR data, a node for controlling motors, a node for path planning).
+
+**Key characteristics:**
+*   **Modular:** Promotes software reusability and separation of concerns.
+*   **Decoupled:** Nodes operate independently and communicate through well-defined interfaces.
+*   **Language Agnostic:** Can be written in C++, Python, or other supported languages.
+
+### 2. Topics: Asynchronous Data Streaming
+
+**Topics** provide a publish/subscribe messaging model for asynchronous, one-to-many communication. Nodes publish data (messages) to a topic, and other nodes can subscribe to that topic to receive the data. This is ideal for streaming continuous data, like sensor readings (e.g., camera images, laser scans) or motor commands.
+
+**Communication Flow (Topic):**
+```mermaid
+graph LR
+    PublisherNode[Node A (LiDAR Driver)] --> Topic[LiDAR Scan Topic]
+    Topic --> SubscriberNode1[Node B (SLAM)]
+    Topic --> SubscriberNode2[Node C (Obstacle Avoidance)]
+```
+
+*   **Publisher:** A node that sends messages of a specific type to a named topic.
+*   **Subscriber:** A node that receives messages of a specific type from a named topic.
+*   **Messages:** Structured data types (e.g., `sensor_msgs/msg/LaserScan`, `geometry_msgs/msg/Twist`) that define the format of the data transmitted over a topic.
+
+### 3. Services: Synchronous Request/Reply
+
+**Services** implement a synchronous request/reply communication model, enabling nodes to send a request and receive a response. This is suitable for operations that require a direct, immediate response, such as triggering a specific action (e.g., "get current robot pose," "turn on a light").
+
+**Communication Flow (Service):**
+```mermaid
+graph LR
+    ClientNode[Node A (Navigation)] --> Request[Request (Goal Pose)]
+    Request --> Service[Service (Plan Path)]
+    Service --> Response[Response (Path Result)]
+    Response --> ClientNode
+```
+
+*   **Service Client:** A node that sends a request to a service.
+*   **Service Server:** A node that receives a request, performs computation, and sends a response.
+*   **Service Definition:** Defines the structure of the request and response messages.
+
+### 4. Actions: Long-Running Goal-Based Tasks
+
+**Actions** are designed for long-running, goal-based tasks that require periodic feedback and the ability to be preempted (cancelled). They build upon the concepts of topics and services, offering a more complex communication pattern suitable for tasks like "navigate to a location," "pick up an object," or "perform a complex manipulation sequence."
+
+**Communication Flow (Action):**
+```mermaid
+graph LR
+    ActionClient[Node A (User Interface)] --> Goal[Goal (Target Location)]
+    Goal --> ActionServer[Node B (Navigation Controller)]
+    ActionServer --> Feedback[Feedback (Current Pose, Progress)]
+    Feedback --> ActionClient
+    ActionServer --> Result[Result (Goal Achieved/Failed)]
+    Result --> ActionClient
+```
+
+*   **Action Client:** Sends a goal, receives periodic feedback, and gets a final result. Can also send cancellation requests.
+*   **Action Server:** Receives goals, processes them, sends feedback periodically, and sends a final result upon completion or preemption.
+*   **Goal:** The desired state or action to be performed.
+*   **Feedback:** Intermediate updates on the progress of the action.
+*   **Result:** The final outcome of the action.
+
+## ROS 2 Middleware: The Data Distribution Service (DDS)
+
+Unlike ROS 1, which used its own custom TCP/IP-based transport (ROSCPP/ROSPY), ROS 2 is built on top of a **Data Distribution Service (DDS)** implementation. DDS is an open international standard for real-time, high-performance, and scalable data exchange.
+
+**Key benefits of DDS in ROS 2:**
+*   **Real-time Communication:** Optimized for predictable latency and high throughput.
+*   **Discovery:** Automatically discovers nodes and topics without a central master.
+*   **Quality of Service (QoS):** Allows fine-grained control over communication parameters (e.g., reliability, durability, history, deadline, liveliness), crucial for mission-critical robotics.
+*   **Security:** Provides built-in authentication, encryption, and access control.
+*   **Platform Agnostic:** Supports various operating systems and hardware.
+
+## Conclusion
+
+The ROS 2 architecture, with its well-defined concepts of nodes, topics, services, and actions, provides a robust and flexible foundation for developing complex robotic systems. Leveraging DDS for its middleware further enhances its capabilities, especially for real-time, secure, and distributed applications in Physical AI and humanoid robotics.
+
+## References
+
+*   Open Robotics. (2023). *ROS 2 Concepts*. Retrieved from https://docs.ros.org/en/humble/Concepts.html
+*   Object Management Group. (2020). *Data Distribution Service for Real-time Systems Version 1.4*. Retrieved from https://www.omg.org/spec/DDS/1.4/

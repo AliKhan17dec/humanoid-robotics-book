@@ -208,3 +208,10 @@ Wait for consent; never auto-create ADRs. Group related decisions (stacks, authe
 
 ## Code Standards
 See `.specify/memory/constitution.md` for code quality, testing, performance, security, and architecture principles.
+
+## Active Technologies
+- Python 3.10+ + ROS 2 Humble or Iron, Gazebo, Unity, NVIDIA Isaac Sim 4.x, Docusaurus (001-robotics-book-outline)
+- N/A (The project is a book, not a data-intensive application) (001-robotics-book-outline)
+
+## Recent Changes
+- 001-robotics-book-outline: Added Python 3.10+ + ROS 2 Humble or Iron, Gazebo, Unity, NVIDIA Isaac Sim 4.x, Docusaurus

@@ -1,0 +1,53 @@
+---
+title: Module 4 Assessment
+sidebar_position: 3
+---
+
+# Module 4 Assessment: Vision-Language-Action (VLA)
+
+This assessment challenges your understanding and practical application of integrating speech recognition, natural language understanding, LLM-based planning, and robot execution to create Vision-Language-Action (VLA) systems.
+
+## Part 1: Conceptual Understanding (Short Answer)
+
+1.  **VLA Pipeline Stages**: Describe the typical stages of a Vision-Language-Action (VLA) pipeline, starting from a human voice command and ending with a robot's physical action.
+2.  **Whisper's Role**: Explain how OpenAI Whisper contributes to a VLA system. What makes it particularly suitable for robotic applications compared to simpler ASR systems?
+3.  **LLM as a Planner**: How do Large Language Models (LLMs) facilitate robot task planning in a VLA context? What are the advantages of an LLM-based planner over traditional rule-based planning for natural language commands?
+4.  **Sim-to-Real for VLA**: Discuss specific challenges of sim-to-real transfer when developing VLA systems. How might discrepancies in object appearance or language interpretation in simulation impact real-world performance?
+5.  **Ethical Considerations**: What are some ethical considerations unique to VLA systems in humanoid robotics, especially concerning interpreting human intent and autonomous decision-making?
+
+## Part 2: Practical Application (Coding & Integration Exercises)
+
+### Exercise 1: Advanced NLU with LLM Prompting
+
+Enhance the LLM-based NLU from the chapter by allowing it to handle more complex commands or provide disambiguation.
+
+**Requirements**:
+1.  **Extend Intent/Entities**: Modify your `llm_based_nlu_conceptual.py` script (or create a new one) to extract a wider range of intents (e.g., "report_status", "clean_up") and entities (e.g., "area_name", "tool_name").
+2.  **Disambiguation**: If an LLM response is ambiguous (e.g., "pick up the block" when there are multiple blocks), modify the prompt to ask the LLM to request clarification.
+3.  **ROS 2 Integration**: Wrap this enhanced NLU logic into a ROS 2 node that subscribes to a `/voice_transcript` topic (publishing `std_msgs/msg/String`) and publishes a structured JSON string of intent and entities to a `/robot_intent` topic.
+
+### Exercise 2: Capstone Project: Partial Implementation
+
+Implement a core part of the "Autonomous Humanoid" capstone project.
+
+**Requirements**:
+1.  **Set up Core ROS 2 Nodes**: Create a launch file (`my_vla_launch.py`) that brings up:
+    *   Your `whisper_node` (from Exercise 1 or conceptual).
+    *   Your `enhanced_nlu_node` (from Exercise 1).
+    *   A simplified `vla_planner_node` (conceptual, based on the `generate_robot_plan` function from the chapter) that subscribes to `/robot_intent` and publishes a plan as a `std_msgs/msg/String` (JSON or Python list string) to `/robot_plan`.
+2.  **Simulated Execution**: Create a simple `mock_action_server_node.py` that subscribes to `/robot_plan` and simply logs the execution of each planned action, without actually controlling a robot.
+3.  **Test Voice Command**: Use a text-to-speech tool (or manually publish to `/voice_transcript`) to send a command like "Robot, go to the office and pick up my mug." Verify that the entire pipeline logs the correct transcript, intent, plan, and mock execution.
+
+## Part 3: Debugging VLA Systems
+
+You've built a VLA system where the robot sometimes fails to pick up objects after receiving a voice command, even though the voice transcription is accurate.
+
+**Describe a systematic debugging process for this multi-modal failure, considering all stages of the VLA pipeline (ASR, NLU, Planning, Execution).** What ROS 2 tools would you use at each stage?
+
+## Submission Guidelines
+
+*   For Part 1, provide your answers in a text document or markdown.
+*   For Part 2, submit your Python code for `enhanced_nlu_node.py`, your `my_vla_launch.py` file, and `mock_action_server_node.py`. Include a log of your test voice command's output.
+*   For Part 3, describe your debugging process clearly and concisely.
+
+Good luck!

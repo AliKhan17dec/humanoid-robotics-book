@@ -1,0 +1,242 @@
+---
+title: Setting Up Gazebo + Extensions
+sidebar_position: 2
+---
+
+# Setting Up Gazebo + Extensions: Your First Robot Simulation
+
+Gazebo is a powerful open-source 3D robotics simulator that allows you to accurately and efficiently test your robot algorithms in a virtual environment. This chapter will guide you through installing Gazebo, understanding its core components, and simulating basic robot interactions and sensors.
+
+## 1. Gazebo Installation and Configuration
+
+Gazebo is often installed as part of the ROS 2 distribution, but it can also be installed standalone. This book assumes you have a ROS 2 Humble/Iron installation on Ubuntu 22.04, which typically includes the necessary Gazebo packages.
+
+### Verifying Gazebo Installation
+
+You can check if Gazebo is installed and accessible via ROS 2:
+
+```bash
+ros2 run gazebo_ros gazebo
+```
+
+This command should launch the Gazebo client and server. If not, you might need to install the `ros-humble-gazebo-ros-pkgs` (or `ros-iron-gazebo-ros-pkgs`) meta-package.
+
+```bash
+sudo apt update
+sudo apt install ros-humble-gazebo-ros-pkgs # Replace humble with iron if applicable
+```
+
+### Gazebo Worlds
+
+Gazebo simulations run within "worlds," which are defined in `.world` XML files. These files specify the environment's static elements (e.g., ground plane, walls), lighting, and any pre-loaded robot models.
+
+## 2. Spawning Robots in Gazebo (URDF/SDF)
+
+Robots in Gazebo are described using two primary XML formats:
+
+*   **URDF (Unified Robot Description Format)**: Primarily used by ROS to describe the kinematic and dynamic properties of a robot. It's excellent for defining the robot's links, joints, and basic visuals. URDF is typically extended with Gazebo-specific tags.
+*   **SDF (Simulation Description Format)**: Gazebo's native format, designed to describe everything in a simulation, including robots, static objects, sensors, and the environment itself. SDF is more expressive than URDF for simulation purposes.
+
+For ROS 2, it's common to define your robot primarily in URDF and then use `ros2_control` and Gazebo plugins to add simulation-specific properties.
+
+### Spawning a Simple Robot (from URDF)
+
+Let's spawn a simple differential drive robot. First, ensure you have a package containing a URDF. For example, `diff_drive_robot_description/urdf/diff_drive_robot.urdf`.
+
+You can use the `spawn_entity.py` script from `gazebo_ros` to spawn a URDF model:
+
+```bash
+# First, ensure your robot description package is built and sourced
+# colcon build --packages-select diff_drive_robot_description
+# . install/setup.bash
+
+# Example: spawning a robot from a custom URDF file
+ros2 run gazebo_ros spawn_entity.py -entity my_diff_drive -file /path/to/your/diff_drive_robot.urdf -x 0.0 -y 0.0 -z 0.1
+```
+
+### Example: Basic Diff Drive URDF (`diff_drive_robot.urdf`)
+
+```xml
+<?xml version="1.0"?>
+<robot name="diff_drive_robot">
+  <link name="base_link">
+    <visual>
+      <geometry><box size="0.4 0.2 0.1"/></geometry>
+      <material name="blue"><color rgba="0 0 1 1"/></material>
+    </visual>
+    <collision>
+      <geometry><box size="0.4 0.2 0.1"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.01" ixy="0.0" ixz="0.0" iyy="0.01" iyz="0.0" izz="0.01"/>
+    </inertial>
+  </link>
+
+  <!-- Example Wheel Link (left) -->
+  <link name="left_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.570795 0 0"/>
+      <geometry><cylinder radius="0.05" length="0.02"/></geometry>
+      <material name="black"><color rgba="0 0 0 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.570795 0 0"/>
+      <geometry><cylinder radius="0.05" length="0.02"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+    <origin xyz="0 0.11 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- ... similar for right wheel ... -->
+
+  <!-- Add Gazebo specific details as extensions here -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Blue</material>
+  </gazebo>
+  <gazebo reference="left_wheel_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+</robot>
+```
+
+## 3. Physics Simulation and Collisions
+
+Gazebo uses a physics engine to simulate realistic interactions. Understanding how to configure this is key.
+
+### Physics Properties
+
+You can define physics properties for links and joints directly within the URDF/SDF, or configure the world's physics engine parameters.
+
+*   **Mass and Inertia**: Defined in the `<inertial>` tag of links. Crucial for realistic dynamics.
+*   **Friction**: Often configured via Gazebo-specific tags or in the `.world` file.
+*   **Collision Geometries**: Defined in the `<collision>` tag. These are simplified shapes used by the physics engine for efficient collision detection. They should approximate the visual mesh.
+
+### Diagram: Gazebo Physics Simulation Flow
+```mermaid
+graph LR
+    A[Robot Model (URDF/SDF)] --> B{Physics Engine}
+    B --> C[Collision Detection]
+    B --> D[Joint Dynamics]
+    C --> E[Contact Forces]
+    D --> E
+    E --> F[Robot Motion]
+    F --> G[Sensor Data Generation]
+```
+
+## 4. Sensor Simulation (LiDAR, Depth, IMU)
+
+Gazebo offers a wide array of sensor plugins that simulate real-world sensor behavior, providing realistic data streams to your robot's ROS 2 nodes.
+
+### Adding a LiDAR Sensor
+
+A common sensor for mobile robotics. You can define it in your URDF with a Gazebo plugin.
+
+```xml
+  <link name="laser_frame">
+    <visual>
+      <geometry><box size="0.01 0.05 0.05"/></geometry>
+      <material name="red"><color rgba="1 0 0 1"/></material>
+    </visual>
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+    </inertial>
+  </link>
+
+  <joint name="laser_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser_frame"/>
+    <origin xyz="0.2 0 0.1" rpy="0 0 0"/>
+  </joint>
+
+  <gazebo reference="laser_frame">
+    <sensor name="laser_sensor" type="ray">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>640</samples>
+            <resolution>1</resolution>
+            <min_angle>-2.26889</min_angle>
+            <max_angle>2.26889</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>10.0</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <plugin name="gazebo_ros_laser_controller" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <argument>~/out</argument>
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>laser_frame</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+```
+
+### Adding an IMU Sensor
+
+IMUs are crucial for robot orientation and balance.
+
+```xml
+  <link name="imu_link">
+    <inertial>
+      <mass value="0.001"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6"/>
+    </inertial>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+  </joint>
+
+  <gazebo reference="imu_link">
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>false</visualize>
+      <plugin name="imu_plugin" filename="libgazebo_ros_imu_sensor.so">
+        <ros>
+          <namespace>imu</namespace>
+          <argument>~/out:=imu/data</argument>
+        </ros>
+        <frame_name>imu_link</frame_name>
+        <initialOrientationAsReference>false</initialOrientationAsReference>
+      </plugin>
+    </sensor>
+  </gazebo>
+```
+
+## Conclusion
+
+Gazebo provides a powerful and flexible platform for simulating robotic systems. By carefully defining your robot's URDF/SDF, configuring its physics properties, and integrating realistic sensor models, you can create a robust digital twin for thorough testing and development of your ROS 2 applications.
+
+## References
+
+*   Open Robotics. (2023). *Gazebo ROS Packages*. Retrieved from https://github.com/ros-simulation/gazebo_ros_pkgs
+*   Open Robotics. (2023). *URDF Overview*. Retrieved from https://docs.ros.org/en/humble/Tutorials/URDF/URDF-Overview.html
+*   Open Robotics. (2023). *Gazebo Plugins Overview*. Retrieved from https://gazebosim.org/docs/harmonic/plugins

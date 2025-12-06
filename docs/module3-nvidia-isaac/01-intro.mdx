@@ -1,0 +1,143 @@
+---
+title: Isaac Sim Basics
+sidebar_position: 1
+---
+
+# Isaac Sim Basics: Unleashing the Power of Realistic Simulation
+
+NVIDIA Isaac Sim, built on the Omniverse platform, is a powerful robotics simulation and synthetic data generation tool. It offers highly realistic, physically accurate, and visually rich environments crucial for developing, testing, and training AI-powered robots. Unlike general-purpose simulators, Isaac Sim is specifically designed for robotics, integrating with NVIDIA's deep learning tools and accelerating the sim-to-real transfer.
+
+## 1. Introduction to Isaac Sim and Omniverse
+
+### What is NVIDIA Omniverse?
+
+NVIDIA Omniverse is an open platform built for virtual collaboration and real-time physically accurate simulation. It is based on Universal Scene Description (USD), an open-source 3D scene description technology developed by Pixar. Omniverse allows multiple users and software applications to connect and work on a single 3D scene simultaneously.
+
+### Isaac Sim's Role in Robotics
+
+Isaac Sim leverages Omniverse to provide:
+*   **Physically Accurate Simulation**: Realistic physics (via PhysX 5.0) and high-fidelity sensor models (cameras, LiDAR, IMU) for accurate robot behavior.
+*   **Photorealistic Rendering**: Advanced real-time ray tracing and path tracing capabilities, generating synthetic data that closely matches real-world visuals.
+*   **Synthetic Data Generation (SDG)**: Programmatic generation of large, diverse datasets with ground-truth labels (segmentation masks, bounding boxes, depth maps), ideal for training perception models when real-world data is scarce or expensive.
+*   **ROS 2 Integration**: Native support for ROS 2, allowing seamless connection of Isaac Sim robots to ROS 2 nodes for control, perception, and planning.
+*   **Sim-to-Real Transfer**: Tools and methodologies to bridge the gap between simulation and the real world, enabling models trained in simulation to perform effectively on physical robots.
+
+## 2. Setting Up an Isaac Sim Environment
+
+Isaac Sim runs on a Linux system with a powerful NVIDIA GPU. It is typically launched via the Omniverse Launcher.
+
+### Key Concepts in Isaac Sim:
+*   **USD (Universal Scene Description)**: The core format for defining scenes, assets, and robots. Everything in Isaac Sim is a USD prim (primitive).
+*   **Stages**: USD files loaded into Isaac Sim are referred to as stages.
+*   **Prims**: The fundamental building blocks in USD, representing objects, components, or properties.
+*   **Extensions**: Modular plugins that add functionality to Isaac Sim (e.g., ROS 2 bridge, SDG tools, robot control interfaces).
+
+### Isaac Sim Pipeline Overview
+```mermaid
+graph LR
+    A[USD Asset] --> B{Isaac Sim Application}
+    B --> C[Physics Engine (PhysX)]
+    B --> D[Rendering Engine (RTX)]
+    B --> E[Sensor Models]
+    B --> F[ROS 2 Bridge]
+    F --> G[ROS 2 Nodes (Control, Perception)]
+    E --> G
+    D --> H[Synthetic Data Generation]
+```
+
+## 3. Spawning and Controlling Robots
+
+Isaac Sim allows you to load and control various robot models, from mobile manipulators to humanoids.
+
+### Loading a Robot from USD
+
+You can load pre-built robot models (like Franka Emika Panda, Universal Robots UR10, or even custom humanoids) that are provided as USD assets.
+
+```python
+# Example of spawning a USD asset in an Isaac Sim Python script
+from omni.isaac.core.articulations import Articulation
+from omni.isaac.core.scenes import Scene
+from omni.isaac.core.utils.nucleus import get_assets_root_path
+from omni.isaac.core import World
+import asyncio
+
+async def load_robot():
+    world = World()
+    world.scene.add_default_ground_plane()
+
+    assets_root_path = get_assets_root_path()
+    if assets_root_path is None:
+        print("Could not find Isaac Sim assets folder")
+        return
+
+    robot_asset_path = assets_root_path + "/Isaac/Robots/Franka/franka_alt_fingers.usd"
+    # For a humanoid, replace with a humanoid USD path
+    
+    franka = world.scene.add(
+        Articulation(
+            prim_path="/World/Franka",
+            usd_path=robot_asset_path,
+            position=[0.0, 0.0, 0.0],
+            orientation=[1.0, 0.0, 0.0, 0.0],
+        )
+    )
+
+    await world.reset_async()
+    print("Robot loaded!")
+
+if __name__ == "__main__":
+    # This is a simplified example. Isaac Sim typically runs within a larger context.
+    # The actual execution might involve launching from the Omniverse Launcher or a specific Python environment.
+    # For standalone scripts, you would usually initialize the Kit application
+    # from omni.isaac.kit import SimulationApp
+    # kit = SimulationApp({"headless": False})
+    # asyncio.run(load_robot())
+    # kit.close()
+    print("Please run this code within an Isaac Sim Python environment or as part of an Isaac Sim extension.")
+```
+
+### Basic Robot Control
+
+Robots in Isaac Sim can be controlled via:
+*   **Joint Control**: Directly setting joint positions, velocities, or torques.
+*   **Inverse Kinematics (IK)**: Controlling the robot's end-effector and letting the IK solver calculate joint commands.
+*   **ROS 2 Interfaces**: Connecting to ROS 2 controllers for high-level command and control.
+
+## 4. Synthetic Data Generation (SDG)
+
+SDG is a killer feature of Isaac Sim. It allows you to programmatically generate labeled datasets from simulation, overcoming many challenges of real-world data collection.
+
+### How SDG Works:
+*   **Randomization**: Randomize scene properties (textures, lighting, object positions, robot poses) to create diverse training data.
+*   **Ground-Truth Labels**: Automatically obtain pixel-perfect segmentation masks, 2D/3D bounding boxes, depth maps, and other ground-truth annotations that are difficult or impossible to get from real sensors.
+*   **Domain Randomization**: A technique where non-essential parameters of the simulation (e.g., lighting, textures, camera angles) are randomized to improve the transferability of trained models from sim-to-real.
+
+### SDG Pipeline
+```mermaid
+graph LR
+    A[USD Scene with Randomizers] --> B{Isaac Sim Renderer}
+    B --> C[Sensor Outputs (RGB, Depth)]
+    B --> D[Ground Truth Data (Segmentation, BBoxes)]
+    C --> E[Deep Learning Model Training]
+    D --> E
+```
+
+## 5. Sim-to-Real Transfer
+
+The ultimate goal of simulation is to develop AI that works reliably on physical robots. Isaac Sim provides tools and a principled approach to facilitate this transfer.
+
+### Key Elements of Sim-to-Real:
+*   **Accurate Physics and Rendering**: Reduces the "reality gap."
+*   **Domain Randomization**: Makes models robust to variations not explicitly seen in the real world.
+*   **Shared Control Interfaces**: Using the same ROS 2 messages and control paradigms in both simulation and hardware.
+*   **TensorRT**: Optimizing deep learning models for inference on NVIDIA GPUs.
+
+## Conclusion
+
+NVIDIA Isaac Sim is an invaluable platform for advanced robotics development, especially in the context of Physical AI and humanoid robots. Its capabilities in realistic simulation, photorealistic rendering, synthetic data generation, and ROS 2 integration make it a powerful tool for accelerating the journey from concept to deployment.
+
+## References
+
+*   NVIDIA. (2023). *NVIDIA Isaac Sim Documentation*. Retrieved from https://docs.omniverse.nvidia.com/isaacsim/latest/index.html
+*   NVIDIA. (2023). *NVIDIA Omniverse Platform*. Retrieved from https://www.nvidia.com/en-us/omniverse/
+*   Bouton, M., et al. (2020). Sim-to-Real Transfer in Robotics: A Survey. *Foundations and Trends in Robotics, 9*(3-4), 163-311.
